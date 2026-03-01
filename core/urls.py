@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin  # Ye line add karni hai
 from django.urls import path
-from shop.views import product_api
-
+# core/urls.py mein line 19-20 ke paas ye likhiye
+from shop.views import product_api, artist_list  # artist_list ko add karein
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/products/', product_api, name='product_api'),
