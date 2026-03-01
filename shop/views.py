@@ -12,6 +12,7 @@ def product_api(request):
 
 @api_view(['GET'])
 def artist_list(request):
-    artists = Artist.objects.all()
+    # 'Arlist' ko badal kar 'Artist' kijiye
+    artists = Artist.objects.all() 
     serializer = ArtistSerializer(artists, many=True)
     return Response(serializer.data)
