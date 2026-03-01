@@ -21,4 +21,5 @@ from shop.views import product_api
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/products/', product_api, name='product_api'),
+    path('api/artists/', artist_list, name='artist_list'),
 ]
