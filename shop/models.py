@@ -12,6 +12,7 @@ class Product(models.Model):
         return self.name
 
 # Naya Artist Table
+# Purane dono 'Artist' models ko hata kar sirf ye ek rakhein
 class Artist(models.Model):
     name = models.CharField(max_length=200)
     designation = models.CharField(max_length=200)
@@ -20,27 +21,13 @@ class Artist(models.Model):
 
     def __str__(self):
         return self.name
-    
-    from django.db import models
-
-class Artist(models.Model):
-    name = models.CharField(max_length=200)
-    designation = models.CharField(max_length=200) # Jaise 'Sculptor' ya 'Painter'
-    artist_type = models.CharField(max_length=100)
-    image_url = models.URLField(max_length=500, null=True, blank=True) # Artist ki photo
-
-    def __str__(self):
-        return self.name
-
-# Naya model har artist ki creations ke liye
-# shop/models.py
 
 class Creation(models.Model):
-    # 'ForeignKey' se har work (jaise 'Dependency') ek artist se jud jayega
+    # 'on_delete=models.CASCADE' hona chahiye (dot aayega)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='creations')
-    title = models.CharField(max_length=200) # Jaise 'DEPENDENCY' [cite: 3]
-    medium = models.CharField(max_length=200) # Jaise 'Brass' [cite: 4]
-    dimensions = models.CharField(max_length=100) # Jaise '11x3.5x11 cm' [cite: 5]
+    title = models.CharField(max_length=200) 
+    medium = models.CharField(max_length=200) 
+    dimensions = models.CharField(max_length=100) 
     image_url = models.URLField(max_length=500, null=True, blank=True)
     
     def __str__(self):
