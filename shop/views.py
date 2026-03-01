@@ -1,9 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Product
-from .models import Artist
-# shop/views.py ki line 4-5 ke paas ye sahi karein
-from .serializers import ProductSerializer, ArtistSerializer # ArtistSerializer ko yahan add karein
+from .models import Product, Artist
+# Teeno serializers ko import karna zaroori hai
+from .serializers import ProductSerializer, ArtistSerializer, ArtistDetailSerializer
 
 @api_view(['GET'])
 def product_api(request):
@@ -13,7 +12,17 @@ def product_api(request):
 
 @api_view(['GET'])
 def artist_list(request):
-    # 'Arlist' ko badal kar 'Artist' kijiye
-    artists = Artist.objects.all() 
+    # Sabhi artists ki basic list ke liye
+    artists = Artist.objects.all()
     serializer = ArtistSerializer(artists, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def artist_detail(request, pk):
+    # Ek specific artist (jaise Aditya Singh) aur unki saari creations ke liye
+    try:
+        artist = Artist.objects.get(pk=pk)
+        serializer = ArtistDetailSerializer(artist)
+        return Response(serializer.data)
+    except Artist.DoesNotExist:
+        return Response({'error': 'Artist nahi mila'}, status=404)

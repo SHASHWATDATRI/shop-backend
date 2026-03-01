@@ -14,12 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin  # Ye line add karni hai
+from django.contrib import admin
 from django.urls import path
-# core/urls.py mein line 19-20 ke paas ye likhiye
-from shop.views import product_api, artist_list  # artist_list ko add karein
+from shop.views import product_api, artist_list, artist_detail # Teeno imports sahi hain
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Sabhi products ke liye
     path('api/products/', product_api, name='product_api'),
+    
+    # Sabhi artists ki list ke liye
     path('api/artists/', artist_list, name='artist_list'),
+    
+    # Kisi ek artist ka portfolio/creation dekhne ke liye (Jaise Aditya Singh)
+    # <int:pk> ka matlab hai ki yahan artist ki ID aayegi (1, 2, 3...)
+    path('api/artists/<int:pk>/', artist_detail, name='artist_detail'),
 ]
