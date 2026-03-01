@@ -1,13 +1,12 @@
 from rest_framework import serializers
-from .models import Product
-from .models import Artist
+from .models import Artist, Product
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__' # Saari details (name, price, image URL) bhejega
+        fields = '__all__'
 
 class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Artist
+        model = Artist # 'Arlist' nahi, 'Artist' (T ke saath)
         fields = '__all__'
