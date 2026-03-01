@@ -2,7 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Product
 from .models import Artist
-from .serializers import ProductSerializer
+# shop/views.py ki line 4-5 ke paas ye sahi karein
+from .serializers import ProductSerializer, ArtistSerializer # ArtistSerializer ko yahan add karein
 
 @api_view(['GET'])
 def product_api(request):
