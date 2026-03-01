@@ -29,5 +29,5 @@ urlpatterns = [
     
     # Kisi ek artist ka portfolio/creation dekhne ke liye (Jaise Aditya Singh)
     # <int:pk> ka matlab hai ki yahan artist ki ID aayegi (1, 2, 3...)
-    path('api/artists/<creation>/', artist_detail, name='artist_detail'),
+    path('api/artists/<int:pk>/', artist_detail, name='artist_detail'),
 ]
