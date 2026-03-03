@@ -1,33 +1,22 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
-from shop.views import product_api, artist_list, artist_detail # Teeno imports sahi hain
+from rest_framework.authtoken.views import obtain_auth_token
+# Saare views ko ek hi line mein import karein
+from shop.views import product_api, artist_list, artist_detail, artist_post_creation
 
 urlpatterns = [
+    # 1. Admin Panel
     path('admin/', admin.site.urls),
     
-    # Sabhi products ke liye
+    # 2. Public APIs (Sabke liye)
     path('api/products/', product_api, name='product_api'),
-    
-    # Sabhi artists ki list ke liye
-    path('api/artists/', artist_list, name='artist_list'),
-    
-    # Kisi ek artist ka portfolio/creation dekhne ke liye (Jaise Aditya Singh)
-    # <int:pk> ka matlab hai ki yahan artist ki ID aayegi (1, 2, 3...)
+    path('api/topartists/', artist_list, name='artist_list'),
     path('api/artists/<int:pk>/', artist_detail, name='artist_detail'),
+
+    # 3. Authentication (Artist Login ke liye)
+    # Yahan username aur password bhejoge toh ek 'Token' milega
+    path('api/login/', obtain_auth_token, name='api_token_auth'), 
+
+    # 4. Artist Specific Actions (PDF wala data upload karne ke liye)
+    path('api/artist/upload/', artist_post_creation, name='artist_upload'),
 ]
