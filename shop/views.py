@@ -7,8 +7,21 @@ from .serializers import (
     ProductSerializer, 
     ArtistSerializer, 
     ArtistDetailSerializer, 
-    CreationSerializer
+    CreationSerializer,
+    UserRegisterSerializer
 )
+
+
+@api_view(['POST'])
+def register_user(request):
+    serializer = UserRegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "message": "User successfully registered! Ab aap login kar sakte hain."
+        }, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # --- 1. Products API ---
 @api_view(['GET'])

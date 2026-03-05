@@ -1,5 +1,22 @@
 from rest_framework import serializers
 from .models import Artist, Product, Creation
+from django.contrib.auth.models import User
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True) # Password dikhega nahi, sirf write hoga
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        # Password ko hash (encrypt) karke save karne ke liye 'create_user' use hota hai
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        return user
 
 # 1. Product Serializer
 class ProductSerializer(serializers.ModelSerializer):
