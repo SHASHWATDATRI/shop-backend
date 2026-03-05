@@ -37,6 +37,22 @@ def artist_list(request):
     serializer = ArtistSerializer(artists, many=True)
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+def product_api(request):
+    # URL se category uthayein (e.g., ?category=photography)
+    category_name = request.query_params.get('category', None)
+    
+    if category_name:
+        # Database mein filter karein
+        products = Product.objects.filter(category=category_name.lower())
+    else:
+        # Agar koi category nahi di, toh sab dikhayein
+        products = Product.objects.all()
+        
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
 # --- 3. Specific Artist Portfolio (Approved Only) ---
 @api_view(['GET'])
 def artist_detail(request, pk):
@@ -54,6 +70,7 @@ def artist_detail(request, pk):
         return Response(data)
     except Artist.DoesNotExist:
         return Response({'error': 'Artist nahi mila'}, status=404)
+        
 
 # --- 4. Artist Login & Post API (For Artists Only) ---
 @api_view(['POST'])
