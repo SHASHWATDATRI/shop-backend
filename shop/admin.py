@@ -4,8 +4,9 @@ from .models import Product, Artist, Creation
 # 1. Product Registration
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'stock')
-    search_fields = ('name',)
+    # Category aur Artist Name ab list mein dikhenge
+    list_display = ('id', 'name', 'price', 'category', 'artist_name', 'stock')
+    list_filter = ('category', 'artist_name') # Filter karne ka option
 
 # 2. Artist Registration
 @admin.register(Artist)
