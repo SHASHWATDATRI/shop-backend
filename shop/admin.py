@@ -1,34 +1,36 @@
 from django.contrib import admin
-from .models import Product, Artist, Creation
+from .models import Product, Artist, Creation, ProductImage # ProductImage ko add kiya
 
-# 1. Product Registration
+# --- 1. Multiple Images Inline ---
+# Isse Product ke andar hi images add karne ka option aayega
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3 # Ek baar mein 3 khali box dikhenge images ke liye
+
+# --- 2. Product Registration ---
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # Category aur Artist Name ab list mein dikhenge
-    list_display = ('id', 'name', 'price', 'category', 'artist_name', 'stock')
-    list_filter = ('category', 'artist_name') # Filter karne ka option
+    # Dimensions ko list mein add kar diya hai
+    list_display = ('id', 'name', 'price', 'category', 'artist_name', 'dimensions', 'stock')
+    list_filter = ('category', 'artist_name')
+    search_fields = ('name', 'category')
+    # Multiple images ka section yahan se aayega
+    inlines = [ProductImageInline]
 
-# 2. Artist Registration
+# --- 3. Artist Registration ---
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    # 'artist_type' (T ke saath)
     list_display = ('id', 'name', 'designation', 'artist_type')
     search_fields = ('name',)
 
-# 3. Creation Registration (Artist Portfolio & Approval System)
+# --- 4. Creation Registration (Artist Portfolio & Approval) ---
 @admin.register(Creation)
 class CreationAdmin(admin.ModelAdmin):
-    # Admin panel mein ye columns dikhenge
     list_display = ('id', 'title', 'artist', 'medium', 'is_approved', 'created_at')
-    
-    # Side mein filter karne ke options
     list_filter = ('is_approved', 'artist', 'medium')
-    
-    # Title se search karne ka option
     search_fields = ('title',)
     
-    # --- Approval Action ---
-    # Isse aap ek saath kai creations ko approve kar sakte ho
+    # Approval Action
     actions = ['make_approved']
 
     def make_approved(self, request, queryset):

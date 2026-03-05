@@ -7,11 +7,21 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image_url = models.URLField(max_length=500, null=True, blank=True)
     stock = models.IntegerField(default=10)
-    category = models.CharField(max_length=100, null=True, blank=True) # Jaise 'Sculpture'
+    # Frontend ki requirement ke liye nayi fields
+    category = models.CharField(max_length=100, null=True, blank=True)
     artist_name = models.CharField(max_length=200, null=True, blank=True)
+    dimensions = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+# Ye model missing hai, ise zaroor add karein
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image_url = models.URLField(max_length=500)
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
 
 class Artist(models.Model):
     # Artist login ke liye User se link karein
