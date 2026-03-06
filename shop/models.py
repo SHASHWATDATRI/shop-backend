@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # 1. Choices hamesha Models ke upar honi chahiye
 CATEGORY_CHOICES = [
-    ('bronze', 'Terracotta'),
+    ('terracotta', 'Terracotta'),
     ('metal', 'Metal'),
     ('glassart', 'Glass Art'),
     ('premium', 'Premium'),
