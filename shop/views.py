@@ -23,25 +23,35 @@ def register_user(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# --- 2. PRODUCTS API (FUNCTION BASED) ---
-# Isme category filter aur simple list dono merge kar diye hain
+# --- 2. PRODUCTS BY CATEGORY SLUG (Aapka manga hua format) ---
+# Format: /api/products/metal/
+@api_view(['GET'])
+def products_by_category(request, category_slug):
+    # category_slug URL se aayega (e.g. 'metal', 'photography')
+    products = Product.objects.filter(category__iexact=category_slug)
+    
+    if not products.exists():
+        return Response({"message": f"Category '{category_slug}' mein koi products nahi hain."}, status=404)
+        
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+# --- 3. PRODUCTS API (QUERY PARAM BASED) ---
+# Format: /api/products/?category=metal
 @api_view(['GET'])
 def product_api(request):
-    # URL se category uthayein (e.g., ?category=photography)
     category_name = request.query_params.get('category', None)
-    
     if category_name:
-        # Database mein filter karein
         products = Product.objects.filter(category__iexact=category_name)
     else:
-        # Agar koi category nahi di, toh sab dikhayein
         products = Product.objects.all()
         
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
 
-# --- 3. ARTIST LIST API ---
+# --- 4. ALL ARTISTS LIST ---
 @api_view(['GET'])
 def artist_list(request):
     artists = Artist.objects.all()
@@ -49,7 +59,7 @@ def artist_list(request):
     return Response(serializer.data)
 
 
-# --- 4. ARTIST DETAIL (PORTFOLIO) ---
+# --- 5. ARTIST DETAIL (PORTFOLIO) ---
 @api_view(['GET'])
 def artist_detail(request, pk):
     try:
@@ -57,7 +67,7 @@ def artist_detail(request, pk):
         serializer = ArtistDetailSerializer(artist)
         data = serializer.data
         
-        # Sirf Approved creations dikhane ka logic
+        # Sirf Approved creations dikhayein
         approved_creations = artist.creations.filter(is_approved=True)
         data['creations'] = CreationSerializer(approved_creations, many=True).data
         
@@ -66,14 +76,14 @@ def artist_detail(request, pk):
         return Response({'error': 'Artist nahi mila'}, status=404)
 
 
-# --- 5. ARTIST UPLOAD API ---
+# --- 6. ARTIST UPLOAD API ---
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def artist_post_creation(request):
     try:
         artist = request.user.artist_profile 
     except (Artist.DoesNotExist, AttributeError):
-        return Response({"error": "Aap ek registered artist nahi hain. Pehle admin se profile banwayein."}, status=403)
+        return Response({"error": "Aap ek registered artist nahi hain. Admin se profile banwayein."}, status=403)
 
     serializer = CreationSerializer(data=request.data)
     if serializer.is_valid():
@@ -85,8 +95,7 @@ def artist_post_creation(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# --- 6. PRODUCT VIEWSET (CLASS BASED) ---
-# Router use karne ke liye aapki class bhi niche de di hai
+# --- 7. PRODUCT VIEWSET (FOR ROUTER) ---
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
