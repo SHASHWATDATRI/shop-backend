@@ -72,7 +72,7 @@ DATABASES = {
 # --- Django REST Framework Configuration ---
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication', # Artist Token pehchanne ke liye
+        'rest_framework_simplejwt.authentication.JWTAuthentication', # JWT Add karein
         'rest_framework.authentication.SessionAuthentication',
     ],
 }

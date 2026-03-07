@@ -104,3 +104,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         if category:
             return Product.objects.filter(category__iexact=category)
         return Product.objects.all()
+    
+    @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
+    def get_user_profile(request):
+     user = request.user
+     return Response({
+        "username": user.username,
+        "is_staff": user.is_staff,  # Ye batayega ki wo admin hai ya nahi
+        "email": user.email
+    })
