@@ -62,9 +62,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database Setup (Neon Postgres)
+import dj_database_url
+import os
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default='postgresql://neondb_owner:npg_g0QHSFTGmp6D@ep-royal-unit-aixgs936-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require',
         conn_max_age=600
     )
 }
