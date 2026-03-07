@@ -1,6 +1,6 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser # IsAdminUser add kiya
 from rest_framework.response import Response
 from .models import Product, Artist, Creation
 from .serializers import (
@@ -86,14 +86,13 @@ def artist_post_creation(request):
 
 
 # --- 7. ADMIN PROFILE & STATUS CHECK ---
-# Isse aapka friend Next.js mein admin dashboard access de payega
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_profile(request):
     user = request.user
     return Response({
         "username": user.username,
-        "is_staff": user.is_staff,  # True matlab Admin hai
+        "is_staff": user.is_staff,
         "is_superuser": user.is_superuser,
         "email": user.email
     })
@@ -102,9 +101,39 @@ def get_user_profile(request):
 # --- 8. PRODUCT VIEWSET (FOR ROUTER) ---
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category:
             return Product.objects.filter(category__iexact=category)
         return Product.objects.all()
+
+
+# --- 9. ADMIN DASHBOARD: PENDING LIST ---
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_pending_list(request):
+    # Sirf wo creations jo approved nahi hain
+    creations = Creation.objects.filter(is_approved=False)
+    serializer = CreationSerializer(creations, many=True)
+    return Response(serializer.data)
+
+
+# --- 10. ADMIN DASHBOARD: APPROVE/DELETE ACTION ---
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def admin_approve_action(request, pk):
+    try:
+        creation = Creation.objects.get(pk=pk)
+        action = request.data.get('action') # 'approve' ya 'delete'
+        
+        if action == 'approve':
+            creation.is_approved = True
+            creation.save()
+            return Response({"message": "Successfully Approved!"})
+        elif action == 'delete':
+            creation.delete()
+            return Response({"message": "Successfully Deleted!"})
+            
+        return Response({"error": "Invalid action"}, status=400)
+    except Creation.DoesNotExist:
+        return Response({"error": "Creation not found"}, status=404)
