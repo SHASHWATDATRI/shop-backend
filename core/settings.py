@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-)vfzoct8ye9w5(sgi%m5ndeb_7cr1o89uc@taw_h7cb@i9ciqv'
 
-DEBUG = True # Deployment ke waqt ise False karna hoga
+DEBUG = True 
 
 ALLOWED_HOSTS = ['*']
 
@@ -23,10 +23,9 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     'rest_framework',
-    'rest_framework.authtoken', # <--- Artist Login ke liye zaroori hai
+    'rest_framework.authtoken', 
     'corsheaders',
     
-    # Local apps
     'shop',
 ]
 
@@ -65,7 +64,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 import dj_database_url
 import os
 
-# settings.py
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'), # Dashboard se uthayega
